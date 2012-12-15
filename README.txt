@@ -1,6 +1,16 @@
 Minetest 0.4 mod: fire
 ======================
 
+Note: new config variable "fire" decides whether fire spreads or not.
+
+in-game
+/set fire false
+
+in minetest.conf
+fire = false
+
+or true to re-enable spreading of fire and burning of things.
+
 License of source code:
 -----------------------
 Copyright (C) 2012 Perttu Ahola (celeron55) <celeron55@gmail.com>
