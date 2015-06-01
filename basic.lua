@@ -1,6 +1,6 @@
 -- minetest/fire/init.lua
 
-minetest.register_node("fire:basic_flame", {
+minetest.register_node(":fire:basic_flame", {
 	description = "Fire",
 	drawtype = "glasslike",
 	tile_images = {"fire_basic_flame.png"},
@@ -107,13 +107,13 @@ minetest.register_abm({
 	interval = 1,
 	chance = 2,
 	action = function(p0, node, _, _)
+        if minetest.setting_getbool("fire") == false then
+           return
+        end
 		-- If there is water or stuff like that around flame, don't ignite
 		if fire.flame_should_extinguish(p0) then
 			return
 		end
-        if minetest.setting_getbool("fire") == false then
-           return
-        end
 		local p = fire.find_pos_for_flame_around(p0)
 		if p then
 			minetest.env:set_node(p, {name="fire:basic_flame"})
@@ -129,6 +129,9 @@ minetest.register_abm({
 	interval = 2,
 	chance = 10,
 	action = function(p0, node, _, _)
+        if minetest.setting_getbool("fire") == false then
+           return
+        end
 		local reg = minetest.registered_nodes[node.name]
 		if not reg or not reg.groups.igniter or reg.groups.igniter < 2 then
 			return
@@ -140,9 +143,6 @@ minetest.register_abm({
 			if fire.flame_should_extinguish(p) then
 				return
 			end
-            if minetest.setting_getbool("fire") == false then
-               return
-            end
 			local p2 = fire.find_pos_for_flame_around(p)
 			if p2 then
 				minetest.env:set_node(p2, {name="fire:basic_flame"})
@@ -174,7 +174,7 @@ minetest.register_abm({
 			fire.on_flame_remove_at(p0)
 			return
 		end
-		if math.random(1,4) == 1 then
+		if minetest.setting_getbool("fire") and math.random(1,4) == 1 then
 			-- remove a flammable node around flame
 			local p = minetest.env:find_node_near(p0, 1, {"group:flammable"})
 			if p then
