@@ -107,9 +107,9 @@ minetest.register_abm({
 	interval = 1,
 	chance = 2,
 	action = function(p0, node, _, _)
-        if minetest.setting_getbool("fire") == false then
-           return
-        end
+       if not fires:spreading("basic") then
+          return
+       end
 		-- If there is water or stuff like that around flame, don't ignite
 		if fire.flame_should_extinguish(p0) then
 			return
@@ -129,7 +129,7 @@ minetest.register_abm({
 	interval = 2,
 	chance = 10,
 	action = function(p0, node, _, _)
-        if minetest.setting_getbool("fire") == false then
+       if not fires:spreading("basic") then
            return
         end
 		local reg = minetest.registered_nodes[node.name]
@@ -174,7 +174,7 @@ minetest.register_abm({
 			fire.on_flame_remove_at(p0)
 			return
 		end
-		if minetest.setting_getbool("fire") and math.random(1,4) == 1 then
+		if fires:spreading("basic") and math.random(1,4) == 1 then
 			-- remove a flammable node around flame
 			local p = minetest.env:find_node_near(p0, 1, {"group:flammable"})
 			if p then

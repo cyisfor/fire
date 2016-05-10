@@ -32,9 +32,9 @@ function makeQuickFlame(victims,name,replace)
    resetFlames()
 
    local png = "fire_"..name..".png"
-   name = "fire:"..name
+   local nodename = "fire:"..name
    local function spreadFlames(p0)
-      if minetest.setting_getbool("fire") then
+      if fires:spreading(name) then
          if newFlames < maxNewFlames then
             newFlames = newFlames - 1
             local minp,maxp = get_area_p0p1(p0)
@@ -42,7 +42,7 @@ function makeQuickFlame(victims,name,replace)
             for n,pos in pairs(nearby) do
                if newFlames < maxNewFlames then
                   newFlames = newFlames + 1
-                  minetest.env:set_node(pos,{name=name})
+                  minetest.env:set_node(pos,{name=nodename})
                else
                   break
                end
@@ -60,20 +60,20 @@ function makeQuickFlame(victims,name,replace)
       end
    end
 
-   minetest.register_node(name, {
-                             description = "Fire",
+   minetest.register_node(nodename, {
+                             description = "Quick Fire ("..name..')',
                              drawtype = "glasslike",
                              tile_images = {png},
                              light_source = 14,
                              groups = {dig_immediate=3},
-                             drop = name,
+                             drop = nodename,
                              walkable = false,
    })
 
    -- Ignite neighboring nodes
    minetest.register_abm(
       {
-         nodenames = {name},
+         nodenames = {nodename},
          interval = 1 ,
          chance = 1,
          action = spreadFlames,
@@ -84,3 +84,4 @@ makeQuickFlame("group:flammable","quick_flame")
 makeQuickFlame("group:water","boiling_water")
 makeQuickFlame("group:lava","quenching_lava")
 makeQuickFlame("group:liquid","dry_dust")
+makeQuickFlame("group:leafdecay","leaf_cutter")
